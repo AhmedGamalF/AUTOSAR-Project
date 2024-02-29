@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;AUTOSAR_Project/Port_cfg.h&apos; to &apos;Port_Cfg.h&apos;" description="Rename resource &apos;Port_cfg.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Port_cfg.h" name="Port_Cfg.h" stamp="1704393245755" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;AUTOSAR_Project/Port_PBcfg.c&apos; to &apos;Port_PBCfg.c&apos;" description="Rename resource &apos;Port_PBcfg.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Port_PBcfg.c" name="Port_PBCfg.c" stamp="1704393256123" updateReferences="true"/>
+</session>

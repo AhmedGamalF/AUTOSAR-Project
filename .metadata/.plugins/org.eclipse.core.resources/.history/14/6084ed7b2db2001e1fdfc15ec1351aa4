@@ -1,0 +1,303 @@
+/******************************************************************************
+ *
+ * Module: Port
+ *
+ * File Name: Port.h
+ *
+ * Description: Header file for TM4C123GH6PM Mic-rocontroller - Port Driver.
+ *
+ * Author: Ahmed_Gamal
+ ******************************************************************************/
+
+#ifndef PORT_H
+#define PORT_H
+
+/* Id for the company in the AUTOSAR
+ * for example Mohamed Tarek's ID = 1000 :) */
+#define PORT_VENDOR_ID          (1000U)
+
+/* PORT Module Id */
+#define PORT_MODULE_ID          (124U)
+
+/* PORT Instance Id */
+#define PORT_INSTANCE_ID         (0U)
+
+/*
+ * Module Version 1.0.0
+ */
+#define PORT_SW_MAJOR_VERSION           (1U)
+#define PORT_SW_MINOR_VERSION           (0U)
+#define PORT_SW_PATCH_VERSION           (0U)
+
+/*
+ * AUTOSAR Version 4.0.3
+ */
+#define PORT_AR_RELEASE_MAJOR_VERSION   (4U)
+#define PORT_AR_RELEASE_MINOR_VERSION   (0U)
+#define PORT_AR_RELEASE_PATCH_VERSION   (3U)
+
+/*
+ * Macros for PORT Status
+ */
+#define PORT_INITIALIZED                (1U)
+#define PORT_NOT_INITIALIZED            (0U)
+
+/* Standard AUTOSAR types */
+#include "Std_Types.h"
+
+/* AUTOSAR checking between Std Types and PORT Modules */
+#if ((STD_TYPES_AR_RELEASE_MAJOR_VERSION != PORT_AR_RELEASE_MAJOR_VERSION)\
+        ||  (STD_TYPES_AR_RELEASE_MINOR_VERSION != PORT_AR_RELEASE_MINOR_VERSION)\
+        ||  (STD_TYPES_AR_RELEASE_PATCH_VERSION != PORT_AR_RELEASE_PATCH_VERSION))
+#error "The AR version of Std_Types.h does not match the expected version"
+#endif
+
+/* PORT Pre-Compile Configuration Header file */
+#include <Port_Cfg.h>
+
+/* AUTOSAR Version checking between PORT_Cfg.h and PORT.h files */
+#if ((PORTCFG_AR_RELEASE_MAJOR_VERSION != PORT_AR_RELEASE_MAJOR_VERSION)\
+        ||  (PORTCFG_AR_RELEASE_MINOR_VERSION != PORT_AR_RELEASE_MINOR_VERSION)\
+        ||  (PORTCFG_AR_RELEASE_PATCH_VERSION != PORT_AR_RELEASE_PATCH_VERSION))
+#error "The AR version of PORT_Cfg.h does not match the expected version"
+#endif
+
+/* Software Version checking between PORT_Cfg.h and PORT.h files */
+#if ((PORTCFG_SW_MAJOR_VERSION != PORT_SW_MAJOR_VERSION)\
+        ||  (PORTCFG_SW_MINOR_VERSION != PORT_SW_MINOR_VERSION)\
+        ||  (PORTCFG_SW_PATCH_VERSION != PORT_SW_PATCH_VERSION))
+#error "The SW version of PORT_Cfg.h does not match the expected version"
+#endif
+
+/* Non AUTOSAR files */
+#include "Common_Macros.h"
+
+
+/******************************************************************************
+ *                      API Service Id Macros                                 *
+ ******************************************************************************/
+/* Port init service ID */
+#define PORT_INIT_SID                                       (uint8)0x00
+
+/* Port SetPinDirection service ID */
+#define PORT_SetPinDirection_SID                            (uint8)0x01
+
+/* Port RefreshPortDirection service ID */
+#define PORT_RefreshPortDirection_SID                       (uint8)0x02
+
+/* Port GetVersionInfo service ID  */
+#define PORT_GetVersionInfo_SID                             (uint8)0x03
+
+/* Port SetPinMode service ID */
+#define PORT_SetPinMode_SID                                 (uint8)0x04
+
+/*******************************************************************************
+ *                      DET Error Codes                                        *
+ *******************************************************************************/
+
+/* DET Error for Invalid Port Pin ID requested */
+#define PORT_E_PARAM_PIN                     (uint8)0x0A
+/* DET Error forPort Pin not configured as changeable */
+#define PORT_E_DIRECTION_UNCHANGEABLE        (uint8)0x0B
+/* DET Error for API Port_Init service called with wrong parameter. */
+#define PORT_E_PARAM_CONFIG                  (uint8)0x0C
+/* DET Error for API Port_SetPinMode service when mode is Invalid mode.*/
+#define PORT_E_PARAM_INVALID_MODE            (uint8)0x0D
+/* DET Error for mode is unchangeable.*/
+#define PORT_E_MODE_UNCHANGEABLE             (uint8)0x0E
+/* DET Error for API service called without module initialization */
+#define PORT_E_UNINIT                        (uint8)0x0F
+/* DET Error for APIs called with a Null Pointer  */
+#define PORT_E_PARAM_POINTER                 (uint8)0x10
+
+
+/*******************************************************************************
+ *                              Module Definitions                             *
+ *******************************************************************************/
+/* Define For Number Zero */
+#define ZERO                         (0U)
+#define PORT_ZERO                    ZERO
+#define PIN_ZERO                     ZERO
+
+#define LOCK_REG_VALUE             0x4C4F434B
+
+
+/*******************************************************************************
+ *                              Module Data Types                              *
+ *******************************************************************************/
+
+/*Description: Data type for the symbolic name of a port pin*/
+typedef uint8     Port_PinType;
+
+
+/*Description: Different port pin modes*/
+typedef uint8    Port_PinModeType;
+
+/*Description: Different port pin Direction*/
+typedef uint8    Port_PinDirectionType;
+
+/* Description: Enum to hold PIN direction */
+typedef enum
+{
+    PORT_PIN_IN,
+    PORT_PIN_OUT
+}Port_PinDirection;
+
+/*Description: Enum to Direction changeable ON or OFF*/
+typedef enum
+{
+    NO_DIRECTION_CHANGE,
+    DIRECTION_CHANGE
+}Port_PinDirection_Changeable;
+
+/* Description: Enum to hold internal resistor type for PIN */
+typedef enum
+{
+    OFF,
+    PULL_UP,
+    PULL_DOWN
+}Port_InternalResistor;
+
+/* Description: Enum to Set PIN Level high/Low */
+typedef enum
+{
+    PORT_PIN_LEVEL_HIGH,
+    PORT_PIN_LEVEL_LOW
+}PORT_PIN_LEVEL_VALUE;
+
+
+/* Description: Port pin mode from mode list for use with Port_Init() function */
+typedef enum
+{
+    PORT_PIN_MODE_ADC,
+    PORT_PIN_MODE_ALT1,
+    PORT_PIN_MODE_ALT2,
+    PORT_PIN_MODE_ALT3,
+    PORT_PIN_MODE_ALT4,
+    PORT_PIN_MODE_ALT5,
+    PORT_PIN_MODE_ALT6,
+    PORT_PIN_MODE_ALT7,
+    PORT_PIN_MODE_DIO
+}Port_PinInitialMode;
+
+/*
+ * Description:
+ * Parameter to indicate if the mode is changeable on a port pin during runtime.
+ * True: Port Pin mode changeable allowed. False: Port Pin mode
+ * changeable not permitted
+ */
+typedef enum
+{
+    NO_Mode_CHANGE,
+    Mode_CHANGE
+}Port_PinMode_Changeable;
+
+/*   Description: Structure to configure each individual PIN:
+ *  1. the PORT Which the pin belongs to. 0, 1, 2, 3, 4 or 5
+ *  2. the number of the pin in the PORT.
+ *  3. the direction of pin --> INPUT or OUTPUT
+ *  4. the internal resistor --> Disable, Pull up or Pull down
+ *  5. the initial Mode --> (DIO,ADC,SPI.....,etc)
+ *  6. the initial Level value --> HIGH or LOW
+ *  7. the Direction changeable --> ON or OFF
+ *  8. the Mode Changeable --> ON or OFF
+ */
+typedef struct
+{
+    uint8 Port_Num;
+    uint8 Pin_Num;
+    Port_PinDirection Direction;
+    Port_InternalResistor Resistor;
+    Port_PinLevelValue Initial_Level;
+    Port_PinInitialMode Mode;
+    Port_PinDirection_Changeable Direction_Changeable;
+    Port_PinMode_Changeable Mode_Changeable;
+}Port_ConfigPin;
+
+/* Description: Type of the external data structure
+ * containing the initialization data for this module.
+ */
+typedef struct
+{
+    Port_ConfigPin  Pins[PORT_NUMBER_OF_PORTS][PORT_NUMBER_OF_PINS];
+}Port_ConfigType;
+/*******************************************************************************
+ *                      Function Prototypes                                    *
+ *******************************************************************************/
+
+/************************************************************************************
+ * Service Name: Port_Init
+ * Sync/Async: Synchronous
+ * Reentrancy: reentrant
+ * Parameters (in): ConfigPtr - Pointer to post-build configuration data
+ * Parameters (inout): None
+ * Parameters (out): None
+ * Return value: None
+ * Description: Function to initialize ALL ports and port pins with the
+ * configuration set pointed to by the parameter
+ ************************************************************************************/
+void Port_Init(const Port_ConfigType* ConfigPtr);
+
+/************************************************************************************
+ * Service Name: Port_SetPinDirection
+ * Sync/Async: Synchronous
+ * Reentrancy: reentrant
+ * Parameters (in): Port Pin ID number , Port Pin Direction
+ * Parameters (inout): None
+ * Parameters (out): None
+ * Return value: None
+ * Description: Function to :
+ *              - Setup the port pin direction during runtime.
+ ************************************************************************************/
+#if(PORT_SET_PIN_DIRECTION_API == STD_ON)
+void Port_SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction);
+#endif
+/************************************************************************************
+ * Service Name: Port_RefreshPortDirection
+ * Sync/Async: Synchronous
+ * Reentrancy: reentrant
+ * Parameters (in): None
+ * Parameters (inout): None
+ * Parameters (out): None
+ * Return value: None
+ * Description: Function to refresh the direction
+ * of all configured ports to the configured direction
+ ************************************************************************************/
+void Port_RefreshPortDirection(void);
+
+/************************************************************************************
+ * Service Name: Port_GetVersionInfo
+ * Sync/Async: Synchronous
+ * Reentrancy: reentrant
+ * Parameters (in): None
+ * Parameters (inout): None
+ * Parameters (out): Pointer to where to store the version information of this module.
+ * Return value: None
+ * Description: Function to return the version information of this module.
+ ************************************************************************************/
+#if(PORT_VERSION_INFO_API == STD_ON)
+void Port_GetVersionInfo(Std_VersionInfoType* versioninfo);
+#endif
+/************************************************************************************
+ * Service Name: Port_SetPinMode
+ * Sync/Async: Synchronous
+ * Reentrancy: reentrant
+ * Parameters (in): Port Pin ID number , New Port Pin mode to be set on port pin
+ * Parameters (inout): None
+ * Parameters (out): None
+ * Return value: None
+ * Description: Function to set the port pin mode of the referenced pin during runtime.
+ ************************************************************************************/
+#if(PORT_SET_PIN_MODE_API == STD_ON)
+void Port_SetPinMode(Port_PinType Pin,Port_PinModeType Mode);
+#endif
+
+
+/*******************************************************************************
+ *                       External Variables                                    *
+ *******************************************************************************/
+
+/* Extern PB structures to be used by PORT and other modules */
+extern const Port_ConfigType PORT_Configuration ;
+
+#endif /* PORT_H */
